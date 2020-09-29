@@ -1,7 +1,8 @@
 import 'package:BarzBRO/ui/college_post.dart';
 import 'package:flutter/material.dart';
-import '../ui/city_post.dart';
-import '../ui/college_post.dart';
+import 'package:BarzBRO/ui/city_post.dart';
+import 'package:BarzBRO/ui/college_post.dart';
+
 
 
 
