@@ -6,8 +6,9 @@ import 'package:amazon_cognito_identity_dart/sig_v4.dart';
 // final credentials = new CognitoCredentials('us-east-2:de074c4c-2e6d-456d-84b6-b11bc7fa2eb6', userPool);
 
 class CognitoService {
-  final CognitoUserPool _userPool = new CognitoUserPool('us-east-2_FFPmb68u4', '3gc6oft576ol7ad0sf741n5jtg');
-  
+  final CognitoUserPool _userPool =
+      new CognitoUserPool('us-east-2_FFPmb68u4', '3gc6oft576ol7ad0sf741n5jtg');
+
   CognitoUser _user;
   CognitoUserSession session;
   CognitoCredentials credentials;
@@ -26,11 +27,13 @@ class CognitoService {
     return session.isValid();
   }
 
-  Future<bool> signUpUser(String username, String password, List<AttributeArg> userAttributes) async {
+  Future<bool> signUpUser(String username, String password,
+      List<AttributeArg> userAttributes) async {
     bool succeed;
     var data;
     try {
-      data = await _userPool.signUp(username, password, userAttributes: userAttributes);
+      data = await _userPool.signUp(username, password,
+          userAttributes: userAttributes);
       succeed = true;
     } catch (e) {
       print(e);
@@ -41,7 +44,7 @@ class CognitoService {
   }
 
   Future<bool> confirmUser(String username, String code) async {
-    _user= new CognitoUser(username, _userPool, storage: _userPool.storage);
+    _user = new CognitoUser(username, _userPool, storage: _userPool.storage);
     bool registerConfirmed = false;
     try {
       registerConfirmed = await _user.confirmRegistration(code);
@@ -68,12 +71,14 @@ class CognitoService {
   Future<bool> signInUser(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
     _user = new CognitoUser(username, _userPool, storage: _userPool.storage);
-    final authDetails = new AuthenticationDetails(username: username, password: password);
+    final authDetails =
+        new AuthenticationDetails(username: username, password: password);
     bool succeed;
     try {
       session = await _user.authenticateUser(authDetails);
       succeed = true;
-      prefs.setString('user', username);
+      prefs?.setString('user', username);
+      prefs?.setBool('isLoggedIn', true);
     } catch (e) {
       print(e);
       succeed = false;
@@ -91,17 +96,16 @@ class CognitoService {
     }
     bool attributeVerified = false;
     try {
-      attributeVerified = await _user.verifyAttribute(
-          email, code);
+      attributeVerified = await _user.verifyAttribute(email, code);
     } catch (e) {
       print(e);
     }
     return attributeVerified;
   }
 
-
   Future<bool> forgotPassword(String username) async {
-    final cognitoUser = new CognitoUser(username, _userPool, storage: _userPool.storage);
+    final cognitoUser =
+        new CognitoUser(username, _userPool, storage: _userPool.storage);
     bool succeed;
     var data;
     try {
@@ -114,7 +118,6 @@ class CognitoService {
     print('Code sent to $data');
     return succeed;
   }
-
 
   Future<bool> checkAuthenticated() async {
     if (_user == null || session == null) {
@@ -129,22 +132,22 @@ class CognitoService {
     if (credentials != null) {
       await credentials.resetAwsCredentials();
       succeed = true;
-      prefs.remove('user');
+      prefs?.clear();
     }
     if (_user != null) {
       await _user.signOut();
       succeed = true;
-      prefs.remove('user');
+      prefs?.clear();
     }
     return succeed;
   }
 
-  Future<bool> changePassword(String username, String code, String newPassword) async {
+  Future<bool> changePassword(
+      String username, String code, String newPassword) async {
     _user = new CognitoUser(username, _userPool, storage: _userPool.storage);
     bool passwordConfirmed = false;
     try {
-      passwordConfirmed = await _user.confirmPassword(
-          code, newPassword);
+      passwordConfirmed = await _user.confirmPassword(code, newPassword);
     } catch (e) {
       print(e);
     }
@@ -156,12 +159,4 @@ class CognitoService {
     session = await _user.getSession();
     return session.getIdToken().getJwtToken();
   }
-
 }
-
-
-
-
-
-
-
