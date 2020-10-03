@@ -1,3 +1,5 @@
+import 'dart:async';
+import '../services/cognito_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,16 +9,23 @@ class SplashScreenState extends StatefulWidget {
 }
 
 class SplashScreen extends State<SplashScreenState> {
+  final cognitoService = CognitoService();
+
   @override
   void initState() {
     super.initState();
-    navigateUser();
+    showScreen();
+  }
+
+  showScreen() {
+    Timer(Duration(milliseconds: 750), () {
+      navigateUser();
+    });
   }
 
   navigateUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var status = prefs.getBool('isLoggedIn') ?? false;
-    print(status);
     if (status) {
       Navigator.pushReplacementNamed(context, '/home');
     } else {

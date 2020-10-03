@@ -1,9 +1,6 @@
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'cognito_storage.dart';
-import 'package:amazon_cognito_identity_dart/sig_v4.dart';
-
-// final credentials = new CognitoCredentials('us-east-2:de074c4c-2e6d-456d-84b6-b11bc7fa2eb6', userPool);
 
 class CognitoService {
   final CognitoUserPool _userPool =
@@ -27,13 +24,13 @@ class CognitoService {
     return session.isValid();
   }
 
-  Future<bool> signUpUser(String username, String password,
-      List<AttributeArg> userAttributes) async {
+  Future<bool> signUpUser(
+      String username, String password, List<AttributeArg> attributes) async {
     bool succeed;
     var data;
     try {
       data = await _userPool.signUp(username, password,
-          userAttributes: userAttributes);
+          userAttributes: attributes);
       succeed = true;
     } catch (e) {
       print(e);
@@ -57,9 +54,9 @@ class CognitoService {
   Future<bool> resendCode(String username) async {
     _user = new CognitoUser(username, _userPool, storage: _userPool.storage);
     bool succeed;
-    String status;
+
     try {
-      status = await _user.resendConfirmationCode();
+      await _user.resendConfirmationCode();
       succeed = true;
     } catch (e) {
       print(e);
@@ -128,6 +125,7 @@ class CognitoService {
 
   Future<bool> signOut() async {
     final prefs = await SharedPreferences.getInstance();
+    final storage = new Storage(prefs);
     bool succeed = false;
     if (credentials != null) {
       await credentials.resetAwsCredentials();
@@ -137,6 +135,7 @@ class CognitoService {
     if (_user != null) {
       await _user.signOut();
       succeed = true;
+      storage.clear();
       prefs?.clear();
     }
     return succeed;
