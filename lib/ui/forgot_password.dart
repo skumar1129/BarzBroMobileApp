@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:BarzBRO/services/cognito_service.dart';
 
 class ForgotState extends StatefulWidget {
-  @override 
+  @override
   ForgotPassword createState() => ForgotPassword();
 }
 
@@ -15,60 +15,52 @@ class ForgotPassword extends State<ForgotState> {
   String newPassword;
   String confirm;
   final successUser = SnackBar(
-    content: Text(
-      'Found User, code sent out'
-    ),
+    content: Text('Found User, code sent out'),
     backgroundColor: Colors.green,
   );
   final successCode = SnackBar(
-    content: Text(
-      'Successfully changed password'
-    ),
+    content: Text('Successfully changed password'),
     backgroundColor: Colors.green,
   );
   final failUser = SnackBar(
-    content: Text(
-      'Make sure the username exists'
-    ),
+    content: Text('Make sure the username exists'),
     backgroundColor: Colors.red,
   );
   final failCode = SnackBar(
-    content: Text(
-      'Make sure the code is the most recent code sent'
-    ),
+    content: Text('Make sure the code is the most recent code sent'),
     backgroundColor: Colors.red,
   );
 
   sendUsername() async {
+    await userService.init();
     bool succeed = await userService.forgotPassword(username);
     if (succeed) {
-      if (mounted) {      
+      if (mounted) {
         setState(() {
           submittedUser = true;
         });
       }
-       _scaffoldKey.currentState.showSnackBar(successUser);
-    }
-    else {
-       _scaffoldKey.currentState.showSnackBar(failUser);
+      _scaffoldKey.currentState.showSnackBar(successUser);
+    } else {
+      _scaffoldKey.currentState.showSnackBar(failUser);
     }
   }
-
 
   changePassword() async {
+    await userService.init();
     if (newPassword == confirm) {
-      bool succeed = await userService.changePassword(username, code, newPassword);
+      bool succeed =
+          await userService.changePassword(username, code, newPassword);
       if (succeed) {
-         _scaffoldKey.currentState.showSnackBar(successCode);
-        Navigator.pushReplacementNamed(context, '/');
-      }
-      else {
-         _scaffoldKey.currentState.showSnackBar(failCode);
+        _scaffoldKey.currentState.showSnackBar(successCode);
+        Navigator.pushReplacementNamed(context, '/signin');
+      } else {
+        _scaffoldKey.currentState.showSnackBar(failCode);
       }
     }
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -77,104 +69,96 @@ class ForgotPassword extends State<ForgotState> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Text('Fill out the information to reset your password',
-              style: TextStyle(
-                fontSize: 20
-              ),
+            Text(
+              'Fill out the information to reset your password',
+              style: TextStyle(fontSize: 20),
             ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username'
-              ),
+                  border: OutlineInputBorder(), labelText: 'Username'),
               onChanged: (value) => {
-                if (mounted) {      
-                  setState(() => {
-                    username = value
-                  })
-                }
+                if (mounted)
+                  {
+                    setState(() => {username = value})
+                  }
               },
             ),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/');
-                },
-                child: Text('Go back',
-                  style: TextStyle(
-                    color: Colors.white
+                    Navigator.pushReplacementNamed(context, '/signin');
+                  },
+                  child: Text(
+                    'Go back',
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-                color: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)
-                ),
+                  color: Colors.red,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
                 ),
                 RaisedButton(
                   onPressed: () {
                     sendUsername();
                   },
-                  child: submittedUser == true ?
-                  Text('Resend code', style: TextStyle(
-                    color: Colors.white
-                  ),) : Text('Submit', style: TextStyle(
-                    color: Colors.white
-                  ),) ,
+                  child: submittedUser == true
+                      ? Text(
+                          'Resend code',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.white),
+                        ),
                   color: Colors.red,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.red)
-                  ),
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
                 )
               ],
-              ),
-            if (submittedUser)...[
-              Text('Fill in the code and new password or hit submit above to resend the code',
-                style: TextStyle(
-                  fontSize: 20
-                ),
+            ),
+            if (submittedUser) ...[
+              Text(
+                'Fill in the code and new password or hit submit above to resend the code',
+                style: TextStyle(fontSize: 20),
               ),
               TextField(
                 decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Verification code',
+                  border: OutlineInputBorder(),
+                  labelText: 'Verification code',
                 ),
                 onChanged: (value) => {
-                  if (mounted) {      
-                    setState(() => {
-                      code = value
-                    })
-                  }
+                  if (mounted)
+                    {
+                      setState(() => {code = value})
+                    }
                 },
               ),
               TextField(
                 decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'New password',
+                  border: OutlineInputBorder(),
+                  labelText: 'New password',
                 ),
                 onChanged: (value) => {
-                  if (mounted) {      
-                    setState(() => {
-                      newPassword = value
-                    })
-                  }
+                  if (mounted)
+                    {
+                      setState(() => {newPassword = value})
+                    }
                 },
                 obscureText: true,
               ),
               TextField(
                 decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Confirm password',
+                  border: OutlineInputBorder(),
+                  labelText: 'Confirm password',
                 ),
                 onChanged: (value) => {
-                  if (mounted) {      
-                    setState(() => {
-                      confirm = value
-                    })
-                  }
+                  if (mounted)
+                    {
+                      setState(() => {confirm = value})
+                    }
                 },
                 obscureText: true,
               ),
@@ -182,16 +166,14 @@ class ForgotPassword extends State<ForgotState> {
                 onPressed: () {
                   changePassword();
                 },
-                child: Text('Submit',
-                  style: TextStyle(
-                    color: Colors.white
-                  ),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.red,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)
-                ),
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
               )
             ]
           ],

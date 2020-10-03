@@ -6,33 +6,35 @@ import 'dart:convert';
 import 'package:BarzBRO/models/city_post_model.dart';
 import 'package:BarzBRO/models/college_post_model.dart';
 
-
 List<CityPost> parseCityPosts(dataItems) {
-  var response = dataItems.map<CityPost>((json) => CityPost.fromJson(json)).toList();
-  
+  var response =
+      dataItems.map<CityPost>((json) => CityPost.fromJson(json)).toList();
+
   return response;
 }
 
 List<CollegePost> parseCollegePosts(dataItems) {
-  return dataItems.map<CollegePost>((json) => CollegePost.fromJson(json)).toList();
+  return dataItems
+      .map<CollegePost>((json) => CollegePost.fromJson(json))
+      .toList();
 }
 
 class ApiService {
   final userService = new CognitoService();
-  final String city_api = 'https://vzpsdsnfc7.execute-api.us-east-2.amazonaws.com/prod';
-  final String college_api = 'https://wznyup28l6.execute-api.us-east-2.amazonaws.com/prod';
-  
-
+  final String city_api =
+      'https://vzpsdsnfc7.execute-api.us-east-2.amazonaws.com/prod';
+  final String college_api =
+      'https://wznyup28l6.execute-api.us-east-2.amazonaws.com/prod';
 
   Future<bool> addCityPost(item) async {
-   
     bool succeed;
+    await userService.init();
     String token = await userService.getToken();
     final prefs = await SharedPreferences.getInstance();
     String path = '/post/add/' + prefs.getString('user');
     String endpoint = this.city_api + path;
     Map<String, dynamic> mapBody;
-    
+
     if (item['neighborhood'] != null) {
       mapBody = {
         'Content': item['content'],
@@ -40,12 +42,12 @@ class ApiService {
         'Bar': item['bar'].toLowerCase(),
         'LocBar': item['location'] + '-' + item['bar'].toLowerCase(),
         'LocUser': item['location'] + '-' + prefs.getString('user'),
-        'LocNeighborhood': item['location'] + '-' + item['neighborhood'].toLowerCase(),
+        'LocNeighborhood':
+            item['location'] + '-' + item['neighborhood'].toLowerCase(),
         'Rating': item['rating'],
         'Neighborhood': item['neighborhood'].toLowerCase()
       };
-    }
-    else {
+    } else {
       mapBody = {
         'Content': item['content'],
         'Location': item['location'],
@@ -60,8 +62,6 @@ class ApiService {
 
     final reqBody = {'Item': mapBody};
 
-    
-
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -70,20 +70,19 @@ class ApiService {
       'Authorization': 'Bearer $token'
     };
 
-
     try {
-      await http.post(endpoint,headers: headers,body: jsonEncode(reqBody));
+      await http.post(endpoint, headers: headers, body: jsonEncode(reqBody));
       succeed = true;
     } catch (e) {
       print(e);
       succeed = false;
     }
-   
+
     return succeed;
-    
   }
 
   Future<bool> deletePost(String location, int number) async {
+    await userService.init();
     String path = '/post/delete/lt/$location/$number';
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
@@ -100,17 +99,16 @@ class ApiService {
     try {
       await http.delete(endpoint, headers: headers);
       succeed = true;
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       succeed = false;
     }
 
     return succeed;
-
   }
 
   Future<bool> updatePost(item) async {
+    await userService.init();
     String path = '/post/update';
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
@@ -141,7 +139,7 @@ class ApiService {
     };
 
     try {
-      await http.patch(endpoint, headers: headers,body: jsonEncode(reqBody));
+      await http.patch(endpoint, headers: headers, body: jsonEncode(reqBody));
       succeed = true;
     } catch (e) {
       print(e);
@@ -151,8 +149,8 @@ class ApiService {
     return succeed;
   }
 
- 
   Future<List<CityPost>> getCityPosts(String location, [int start]) async {
+    await userService.init();
     String path = '/post/l/$location?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -175,14 +173,15 @@ class ApiService {
       print(e);
     }
     var jsonReponse = json.decode(response.body);
-  
+
     return compute(parseCityPosts, jsonReponse['Items']);
-   
   }
 
-  Future<List<CityPost>> getCityPostsRating(String location, [int start, int rating]) async {
+  Future<List<CityPost>> getCityPostsRating(String location,
+      [int start, int rating]) async {
+    await userService.init();
     String path = '/post/lr/$location?limit=5';
-    
+
     var response;
     if (start != null && start > 0) {
       path += '&start=$start&rating=$rating';
@@ -190,7 +189,7 @@ class ApiService {
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
 
-     Map<String, String> headers = {
+    Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
       'Content-Type': 'application/json',
@@ -207,7 +206,9 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityUserTime(String locUser, [int start, String location]) async {
+  Future<List<CityPost>> getCityUserTime(String locUser,
+      [int start, String location]) async {
+    await userService.init();
     String path = '/post/lut/$locUser?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -233,7 +234,9 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityUserRating(String locUser, [int start, String location, int rating]) async {
+  Future<List<CityPost>> getCityUserRating(String locUser,
+      [int start, String location, int rating]) async {
+    await userService.init();
     String path = '/post/lur/$locUser?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -241,7 +244,6 @@ class ApiService {
     }
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-
 
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
@@ -258,10 +260,11 @@ class ApiService {
     }
     var jsonReponse = json.decode(response.body);
     return compute(parseCityPosts, jsonReponse['Items']);
-
   }
 
-  Future<List<CityPost>> getCityBarTime(String locBar, [int start, String location]) async {
+  Future<List<CityPost>> getCityBarTime(String locBar,
+      [int start, String location]) async {
+    await userService.init();
     String path = '/post/lbt/$locBar?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -282,14 +285,14 @@ class ApiService {
       response = await http.get(endpoint, headers: headers);
     } catch (e) {
       print(e);
-      
     }
     var jsonReponse = json.decode(response.body);
     return compute(parseCityPosts, jsonReponse['Items']);
-  
   }
 
-  Future<List<CityPost>> getCityBarRating(String locBar, [int start, String location, int rating]) async {
+  Future<List<CityPost>> getCityBarRating(String locBar,
+      [int start, String location, int rating]) async {
+    await userService.init();
     String path = '/post/lbr/$locBar?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -297,7 +300,6 @@ class ApiService {
     }
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-  
 
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
@@ -317,6 +319,7 @@ class ApiService {
   }
 
   Future<List<CityPost>> getUserPost([int start, String location]) async {
+    await userService.init();
     final prefs = await SharedPreferences.getInstance();
     String path = '/post/u/' + prefs.getString('user') + '?limit=4';
     var response;
@@ -324,8 +327,8 @@ class ApiService {
       path += '&start=$start&location=$location';
     }
     String endpoint = this.city_api + path;
+    await userService.init();
     String token = await userService.getToken();
-  
 
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
@@ -346,11 +349,12 @@ class ApiService {
   }
 
   Future<dynamic> getBarsInLoc(String location) async {
+    await userService.init();
     String path = '/post/bar/$location';
     var response;
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-    
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -361,7 +365,6 @@ class ApiService {
 
     try {
       response = await http.get(endpoint, headers: headers);
-      
     } catch (e) {
       print(e);
     }
@@ -370,11 +373,12 @@ class ApiService {
   }
 
   Future<dynamic> getPostNbhood(String location) async {
+    await userService.init();
     String path = '/post/nbhood/$location';
     var response;
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-    
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -390,15 +394,15 @@ class ApiService {
     }
     var jsonResponse = json.decode(response.body);
     return jsonResponse['Items'];
-    
   }
 
   Future<dynamic> getSchoolBar(String school) async {
+    await userService.init();
     String path = '/post/schoolbar/sbb/$school';
     var response;
     String endpoint = this.college_api + path;
     String token = await userService.getToken();
-    
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -409,7 +413,6 @@ class ApiService {
 
     try {
       response = await http.get(endpoint, headers: headers);
-      
     } catch (e) {
       print(e);
     }
@@ -418,11 +421,12 @@ class ApiService {
   }
 
   Future<dynamic> getSchoolReg(String school) async {
+    await userService.init();
     String path = '/post/schoolreg/srs/$school';
     var response;
     String endpoint = this.college_api + path;
     String token = await userService.getToken();
-    
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -433,7 +437,6 @@ class ApiService {
 
     try {
       response = await http.get(endpoint, headers: headers);
-      
     } catch (e) {
       print(e);
     }
@@ -441,7 +444,9 @@ class ApiService {
     return jsonResponse['Items'];
   }
 
-  Future<List<CityPost>> getCityNbhoodTime(String locNeighborhood, [int start, String location]) async {
+  Future<List<CityPost>> getCityNbhoodTime(String locNeighborhood,
+      [int start, String location]) async {
+    await userService.init();
     String path = '/post/nbhood/nt/$locNeighborhood?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -449,7 +454,6 @@ class ApiService {
     }
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-  
 
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
@@ -469,7 +473,9 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityNbhoodRating(String locNeighborhood, [int start, String location, int rating]) async {
+  Future<List<CityPost>> getCityNbhoodRating(String locNeighborhood,
+      [int start, String location, int rating]) async {
+    await userService.init();
     String path = '/post/nbhood/nr/$locNeighborhood?limit';
     var response;
     if (start != null && start > 0) {
@@ -477,7 +483,6 @@ class ApiService {
     }
     String endpoint = this.city_api + path;
     String token = await userService.getToken();
-  
 
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
@@ -495,10 +500,10 @@ class ApiService {
 
     var jsonReponse = json.decode(response.body);
     return compute(parseCityPosts, jsonReponse['Items']);
-
   }
 
   Future<bool> addCollegePost(item) async {
+    await userService.init();
     bool succeed;
     String token = await userService.getToken();
     final prefs = await SharedPreferences.getInstance();
@@ -540,7 +545,6 @@ class ApiService {
       'Authorization': 'Bearer $token'
     };
 
-
     try {
       await http.post(endpoint, headers: headers, body: jsonEncode(reqBody));
       succeed = true;
@@ -552,6 +556,7 @@ class ApiService {
   }
 
   Future<bool> deleteCollegePost(String school, int number) async {
+    await userService.init();
     String path = '/post/college/delete/$school/$number';
     String endpoint = this.college_api + path;
     String token = await userService.getToken();
@@ -568,21 +573,21 @@ class ApiService {
     try {
       await http.delete(endpoint, headers: headers);
       succeed = true;
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       succeed = false;
     }
 
     return succeed;
-  } 
+  }
 
   Future<bool> updateCollegePost(item) async {
+    await userService.init();
     String path = '/post/college/update';
     String endpoint = this.college_api + path;
     String token = await userService.getToken();
     bool succeed;
-    
+
     Map<String, dynamic> reqBody = {
       'Item': {
         'Content': item['content'],
@@ -608,7 +613,7 @@ class ApiService {
     };
     print(reqBody);
     try {
-      await http.patch(endpoint, headers: headers,body: jsonEncode(reqBody));
+      await http.patch(endpoint, headers: headers, body: jsonEncode(reqBody));
       succeed = true;
     } catch (e) {
       print(e);
@@ -618,16 +623,18 @@ class ApiService {
     return succeed;
   }
 
-  Future<List<CollegePost>> getCollegePostTime(String college, [int start]) async {
+  Future<List<CollegePost>> getCollegePostTime(String college,
+      [int start]) async {
+    await userService.init();
     String path = '/post/school/sr/$college?limit=5';
     String token = await userService.getToken();
     var response;
-    
+
     if (start != null && start > 0) {
       path += '&start=$start';
     }
     String endpoint = this.college_api + path;
-   
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -641,13 +648,15 @@ class ApiService {
     } catch (e) {
       print(e);
     }
-    
+
     var jsonReponse = json.decode(response.body);
-    
+
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegePostRating(String college, [int start,int rating]) async {
+  Future<List<CollegePost>> getCollegePostRating(String college,
+      [int start, int rating]) async {
+    await userService.init();
     String path = '/post/school/st/$college?limit=5';
     String token = await userService.getToken();
     var response;
@@ -673,7 +682,9 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegeBarTime(String schoolBar, [int start, String school]) async {
+  Future<List<CollegePost>> getCollegeBarTime(String schoolBar,
+      [int start, String school]) async {
+    await userService.init();
     String path = '/post/schoolbar/sbt/$schoolBar?limit=5';
     String token = await userService.getToken();
     var response;
@@ -681,7 +692,7 @@ class ApiService {
       path += '&start=$start&school=$school';
     }
     String endpoint = this.college_api + path;
-   
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -699,7 +710,9 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegeBarRating(String schoolBar, [int start, String school, int rating]) async {
+  Future<List<CollegePost>> getCollegeBarRating(String schoolBar,
+      [int start, String school, int rating]) async {
+    await userService.init();
     String path = '/post/schoolbar/sbr/$schoolBar?limit=5';
     String token = await userService.getToken();
     var response;
@@ -725,7 +738,9 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolRegTime(String schoolReg, [int start, String school]) async {
+  Future<List<CollegePost>> getSchoolRegTime(String schoolReg,
+      [int start, String school]) async {
+    await userService.init();
     String path = '/post/schoolreg/srt/$schoolReg?limit=5';
     String token = await userService.getToken();
     var response;
@@ -751,7 +766,9 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolRegRating(String schoolReg, [int start, String school, int rating]) async {
+  Future<List<CollegePost>> getSchoolRegRating(String schoolReg,
+      [int start, String school, int rating]) async {
+    await userService.init();
     String path = '/post/schoolreg/srr/$schoolReg?limit=5';
     String token = await userService.getToken();
     var response;
@@ -777,7 +794,9 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-   Future<List<CollegePost>> getSchoolUserTime(String schoolUser, [int start, String school]) async {
+  Future<List<CollegePost>> getSchoolUserTime(String schoolUser,
+      [int start, String school]) async {
+    await userService.init();
     String path = '/post/schooluser/sut/$schoolUser?limit=5';
     String token = await userService.getToken();
     var response;
@@ -785,7 +804,7 @@ class ApiService {
       path += '&start=$start&school=$school';
     }
     String endpoint = this.college_api + path;
-    
+
     Map<String, String> headers = {
       'service': 'dev-barzbro-api-city',
       'region': 'us-east-2',
@@ -799,11 +818,13 @@ class ApiService {
       print(e);
     }
     var jsonReponse = json.decode(response.body);
-    
+
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolUserRating(String schoolUser, [int start, String school, int rating]) async {
+  Future<List<CollegePost>> getSchoolUserRating(String schoolUser,
+      [int start, String school, int rating]) async {
+    await userService.init();
     String path = '/post/schooluser/sur/$schoolUser?limit=5';
     String token = await userService.getToken();
     var response;
@@ -830,8 +851,9 @@ class ApiService {
   }
 
   Future<List<CollegePost>> getSchoolUser([int start, String school]) async {
+    await userService.init();
     final prefs = await SharedPreferences.getInstance();
-    String path = '/post/school/u/'+ prefs.getString('user')+'?limit=5';
+    String path = '/post/school/u/' + prefs.getString('user') + '?limit=5';
     String token = await userService.getToken();
     var response;
     if (start != null && start > 0) {
@@ -855,8 +877,4 @@ class ApiService {
     var jsonReponse = json.decode(response.body);
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
-
 }
-
-
- 
