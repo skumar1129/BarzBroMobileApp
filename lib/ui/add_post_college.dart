@@ -4,7 +4,7 @@ import '../widgets/nav.dart';
 import '../widgets//bottom_nav.dart';
 
 class AddPostCollegeState extends StatefulWidget {
-  @override 
+  @override
   AddPostCollege createState() => AddPostCollege();
 }
 
@@ -18,28 +18,23 @@ class AddPostCollege extends State<AddPostCollegeState> {
   String content;
 
   final successAdd = SnackBar(
-    content: Text(
-      'Successfully made your post'
-    ),
+    content: Text('Successfully made your post'),
     backgroundColor: Colors.green,
   );
 
   final failAdd = SnackBar(
     content: Text(
-      'Make sure you fill out all the required fields or check your network connection'
-    ),
+        'Make sure you fill out all the required fields or check your network connection'),
     backgroundColor: Colors.red,
   );
 
   final failForm = SnackBar(
-    content: Text(
-      'Make sure all the required fields are filled out'
-    ),
+    content: Text('Make sure all the required fields are filled out'),
     backgroundColor: Colors.red,
   );
 
-  submitPost(String school, String bar, String neighborhood, int rating, String content) async {
-   
+  submitPost(String school, String bar, String neighborhood, int rating,
+      String content) async {
     var item = {
       'school': school,
       'content': content,
@@ -49,19 +44,16 @@ class AddPostCollege extends State<AddPostCollegeState> {
     };
     if (school == null || bar == null || content == null || rating == null) {
       _scaffoldKey.currentState.showSnackBar(failForm);
-    }
-    else {
+    } else {
       bool succeed = await apiSerivce.addCollegePost(item);
       if (succeed) {
         _scaffoldKey.currentState.showSnackBar(successAdd);
         Navigator.pushReplacementNamed(context, '/post/school/user');
-      }
-      else {
+      } else {
         _scaffoldKey.currentState.showSnackBar(failAdd);
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +64,9 @@ class AddPostCollege extends State<AddPostCollegeState> {
         children: <Widget>[
           NavBarState(),
           Center(
-            child: Text('Create a New College Post',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold
-              ),
+            child: Text(
+              'Create a New College Post',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
           ),
           const Divider(
@@ -94,12 +84,12 @@ class AddPostCollege extends State<AddPostCollegeState> {
                     'Penn State',
                     'Illinois',
                     'Wisconsin'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  ]
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
                     if (mounted) {
                       setState(() {
@@ -115,15 +105,12 @@ class AddPostCollege extends State<AddPostCollegeState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Bar*'
-                  ),
+                      border: OutlineInputBorder(), labelText: 'Bar*'),
                   onChanged: (value) => {
-                    if (mounted) {  
-                      setState(() => {
-                        bar = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {bar = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -132,15 +119,13 @@ class AddPostCollege extends State<AddPostCollegeState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Area of campus'
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Area of campus*'),
                   onChanged: (value) => {
-                    if (mounted) { 
-                      setState(() => {
-                        neighborhood = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {neighborhood = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -148,25 +133,14 @@ class AddPostCollege extends State<AddPostCollegeState> {
                   thickness: 0.5,
                 ),
                 DropdownButtonFormField(
-                  items: [
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
-                    if (mounted) {  
+                    if (mounted) {
                       setState(() {
                         rating = int.parse(value);
                       });
@@ -181,15 +155,13 @@ class AddPostCollege extends State<AddPostCollegeState> {
                 TextField(
                   maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'What\'s good?*'
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'What\'s good?*'),
                   onChanged: (value) => {
-                    if (mounted) {  
-                      setState(() => {
-                        content = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {content = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -200,33 +172,30 @@ class AddPostCollege extends State<AddPostCollegeState> {
                   children: <Widget>[
                     RaisedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/post/school/user');
+                        Navigator.pushReplacementNamed(
+                            context, '/post/school/user');
                       },
-                      child: Text('Cancel',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
                     ),
                     RaisedButton(
                       onPressed: () {
                         submitPost(school, bar, neighborhood, rating, content);
                       },
-                      child: Text('Submit',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
                     ),
                   ],
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -236,8 +205,7 @@ class AddPostCollege extends State<AddPostCollegeState> {
           ),
         ],
       ),
-      bottomNavigationBar:  BottomNavState(),
+      bottomNavigationBar: BottomNavState(),
     );
-    
-  } 
+  }
 }
