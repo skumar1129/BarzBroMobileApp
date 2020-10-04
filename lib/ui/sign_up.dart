@@ -262,7 +262,6 @@ class SignUp extends State<SignUpState> {
           ],
         ),
       ),
-      resizeToAvoidBottomPadding: false,
     );
   }
 }
