@@ -48,7 +48,7 @@ class SignUp extends State<SignUpState> {
   );
   final failSignUp = SnackBar(
     content: Text(
-        'Make sure to fill in all the required information and that the password is longer than 6 letters, has a number, and capital letter'),
+        'Make sure to fill in all the required information and that the password is longer than 8 characters, has a number, and capital letter'),
     backgroundColor: Colors.red,
   );
   final failPasswrod = SnackBar(
