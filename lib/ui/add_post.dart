@@ -4,7 +4,7 @@ import '../widgets/nav.dart';
 import '../widgets//bottom_nav.dart';
 
 class AddPostState extends StatefulWidget {
-  @override 
+  @override
   AddPost createState() => AddPost();
 }
 
@@ -18,27 +18,22 @@ class AddPost extends State<AddPostState> {
   String content;
 
   final successAdd = SnackBar(
-    content: Text(
-      'Successfully made your post'
-    ),
+    content: Text('Successfully made your post'),
     backgroundColor: Colors.green,
   );
 
   final failAdd = SnackBar(
-    content: Text(
-      'Error, check your network connection'
-    ),
+    content: Text('Error, check your network connection'),
     backgroundColor: Colors.red,
   );
 
   final failForm = SnackBar(
-    content: Text(
-      'Make sure all the required fields are filled out'
-    ),
+    content: Text('Make sure all the required fields are filled out'),
     backgroundColor: Colors.red,
   );
 
-  submitPost(String city, String bar, String neighborhood, int rating, String content) async {
+  submitPost(String city, String bar, String neighborhood, int rating,
+      String content) async {
     var item = {
       'location': city,
       'content': content,
@@ -46,21 +41,22 @@ class AddPost extends State<AddPostState> {
       'rating': rating,
       'neighborhood': neighborhood
     };
-    if (city == null || bar == null || content == null || rating == null) {
+    if (city == null ||
+        bar == null ||
+        content == null ||
+        rating == null ||
+        neighborhood == null) {
       _scaffoldKey.currentState.showSnackBar(failForm);
-    }
-    else {
+    } else {
       bool succeed = await apiSerivce.addCityPost(item);
       if (succeed) {
         _scaffoldKey.currentState.showSnackBar(successAdd);
         Navigator.pushReplacementNamed(context, '/post/user');
-      }
-      else {
+      } else {
         _scaffoldKey.currentState.showSnackBar(failAdd);
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +67,9 @@ class AddPost extends State<AddPostState> {
         children: <Widget>[
           NavBarState(),
           Center(
-            child: Text('Create a City New Post',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold
-              ),
+            child: Text(
+              'Create a City New Post',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
           const Divider(
@@ -93,14 +87,14 @@ class AddPost extends State<AddPostState> {
                     'Denver',
                     'Washington DC',
                     'Minneapolis'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  ]
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
-                    if (mounted) {       
+                    if (mounted) {
                       setState(() {
                         city = value;
                       });
@@ -114,15 +108,12 @@ class AddPost extends State<AddPostState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Bar*'
-                  ),
+                      border: OutlineInputBorder(), labelText: 'Bar*'),
                   onChanged: (value) => {
-                    if (mounted) {  
-                      setState(() => {
-                        bar = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {bar = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -131,15 +122,12 @@ class AddPost extends State<AddPostState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Neighborhood'
-                  ),
+                      border: OutlineInputBorder(), labelText: 'Neighborhood*'),
                   onChanged: (value) => {
-                    if (mounted) {   
-                      setState(() => {
-                        neighborhood = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {neighborhood = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -147,25 +135,14 @@ class AddPost extends State<AddPostState> {
                   thickness: 0.5,
                 ),
                 DropdownButtonFormField(
-                  items: [
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
-                    if (mounted) {  
+                    if (mounted) {
                       setState(() {
                         rating = int.parse(value);
                       });
@@ -180,15 +157,13 @@ class AddPost extends State<AddPostState> {
                 TextField(
                   maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'What\'s good?*'
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'What\'s good?*'),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        content = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {content = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -201,31 +176,27 @@ class AddPost extends State<AddPostState> {
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/post/user');
                       },
-                      child: Text('Cancel',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
                     ),
                     RaisedButton(
                       onPressed: () {
                         submitPost(city, bar, neighborhood, rating, content);
                       },
-                      child: Text('Submit',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
                     ),
                   ],
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -235,8 +206,7 @@ class AddPost extends State<AddPostState> {
           ),
         ],
       ),
-      bottomNavigationBar:  BottomNavState(),
+      bottomNavigationBar: BottomNavState(),
     );
-    
-  } 
+  }
 }
