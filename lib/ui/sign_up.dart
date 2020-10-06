@@ -47,21 +47,20 @@ class SignUp extends State<SignUpState> {
     backgroundColor: Colors.green,
   );
   final failSignUp = SnackBar(
-    content: Text(
-        'Make sure to fill in all the required information and that the password is longer than 8 characters, has a number, and capital letter'),
+    content: Text('Make sure not to leave fields blank'),
     backgroundColor: Colors.red,
   );
-  final failPasswrod = SnackBar(
+  final failPassword = SnackBar(
     content: Text('Make sure your passwords match'),
     backgroundColor: Colors.red,
   );
 
   signUp(username, email, password, confirm) async {
     final attributes = [new AttributeArg(name: 'email', value: email)];
-    bool succeed = false;
-    if (password == confirm) {
-      succeed = await userService.signUpUser(username, password, attributes);
-      if (succeed) {
+    var message;
+    if (password == confirm && email != null) {
+      message = await userService.signUpUser(username, password, attributes);
+      if (message == 'Success') {
         _scaffoldKey.currentState.showSnackBar(successSignUp);
         if (mounted) {
           setState(() {
@@ -69,10 +68,30 @@ class SignUp extends State<SignUpState> {
           });
         }
       } else {
-        _scaffoldKey.currentState.showSnackBar(failSignUp);
+        if (message ==
+                '1 validation error detected: Value at \'password\' failed to satisfy constraint: Member must have length greater than or equal to 6' ||
+            message ==
+                'Password did not conform with policy: Password not long enough') {
+          message =
+              'Password must have a length of at least 8 characters with a number and uppercase character';
+        }
+        if (message ==
+                '2 validation errors detected: Value at \'password\' failed to satisfy constraint: Member must not be null; Value at \'username\' failed to satisfy constraint: Member must not be null' ||
+            message ==
+                '1 validation error detected: Value at \'password\' failed to satisfy constraint: Member must not be null') {
+          message = 'Make sure not to leave fields blank';
+        }
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+            message,
+          ),
+          backgroundColor: Colors.red,
+        ));
       }
+    } else if (email == null) {
+      _scaffoldKey.currentState.showSnackBar(failSignUp);
     } else {
-      _scaffoldKey.currentState.showSnackBar(failPasswrod);
+      _scaffoldKey.currentState.showSnackBar(failPassword);
     }
   }
 

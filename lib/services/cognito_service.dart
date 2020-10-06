@@ -24,20 +24,21 @@ class CognitoService {
     return session.isValid();
   }
 
-  Future<bool> signUpUser(
+  Future<String> signUpUser(
       String username, String password, List<AttributeArg> attributes) async {
-    bool succeed;
+    String message;
     var data;
     try {
       data = await _userPool.signUp(username, password,
           userAttributes: attributes);
-      succeed = true;
+      if (data != null) {
+        message = 'Success';
+      }
     } catch (e) {
       print(e);
-      succeed = false;
+      message = e.message;
     }
-    print(data);
-    return succeed;
+    return message;
   }
 
   Future<bool> confirmUser(String username, String code) async {
@@ -65,22 +66,21 @@ class CognitoService {
     return succeed;
   }
 
-  Future<bool> signInUser(String username, String password) async {
+  Future<String> signInUser(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
     _user = new CognitoUser(username, _userPool, storage: _userPool.storage);
     final authDetails =
         new AuthenticationDetails(username: username, password: password);
-    bool succeed;
+    String message;
     try {
       session = await _user.authenticateUser(authDetails);
-      succeed = true;
+      message = 'Success';
       prefs?.setString('user', username);
       prefs?.setBool('isLoggedIn', true);
     } catch (e) {
-      print(e);
-      succeed = false;
+      message = e.message;
     }
-    return succeed;
+    return message;
   }
 
   Future<bool> verifyEmail(String email, String code) async {
@@ -149,6 +149,7 @@ class CognitoService {
       passwordConfirmed = await _user.confirmPassword(code, newPassword);
     } catch (e) {
       print(e);
+      passwordConfirmed = false;
     }
     return passwordConfirmed;
   }

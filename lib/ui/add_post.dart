@@ -41,7 +41,11 @@ class AddPost extends State<AddPostState> {
       'rating': rating,
       'neighborhood': neighborhood
     };
-    if (city == null || bar == null || content == null || rating == null) {
+    if (city == null ||
+        bar == null ||
+        content == null ||
+        rating == null ||
+        neighborhood == null) {
       _scaffoldKey.currentState.showSnackBar(failForm);
     } else {
       bool succeed = await apiSerivce.addCityPost(item);

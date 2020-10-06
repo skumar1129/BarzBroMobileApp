@@ -8,7 +8,7 @@ import '../services/api_service.dart';
 import 'package:strings/strings.dart';
 
 class SearchCityState extends StatefulWidget {
-  @override 
+  @override
   SearchCity createState() => SearchCity();
 }
 
@@ -23,9 +23,7 @@ class SearchCity extends State<SearchCityState> {
   List<String> nbhoodList = [];
 
   final failSearch = SnackBar(
-    content: Text(
-      'Make sure you have two fields filled out'
-    ),
+    content: Text('Make sure you have two fields filled out'),
     backgroundColor: Colors.red,
   );
 
@@ -40,7 +38,7 @@ class SearchCity extends State<SearchCityState> {
       });
     }
     for (var data in barData) {
-      if (!barList.contains(data['Bar'])){
+      if (!barList.contains(data['Bar'])) {
         if (mounted) {
           setState(() {
             barList.add(data['Bar']);
@@ -64,24 +62,21 @@ class SearchCity extends State<SearchCityState> {
     if (bar != null) {
       String locBar = '$city-$bar';
       Navigator.pushReplacementNamed(context, BarCityPost.route,
-      arguments: locBar);
-    }
-    else if (neighborhood != null) {
+          arguments: locBar);
+    } else if (neighborhood != null) {
       String locNbhood = '$city-$neighborhood';
       Navigator.pushReplacementNamed(context, NbhoodCityPost.route,
-      arguments: locNbhood);
-    }
-    else if (user != null && city != null) {
+          arguments: locNbhood);
+    } else if (user != null && city != null) {
       String locUser = '$city-$user';
       Navigator.pushReplacementNamed(context, UserCityPost.route,
-      arguments: locUser);
-    }
-    else {
+          arguments: locUser);
+    } else {
       _scaffoldKey.currentState.showSnackBar(failSearch);
     }
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -94,16 +89,13 @@ class SearchCity extends State<SearchCityState> {
             color: Colors.white,
             thickness: 0.5,
           ),
-          Text('Search City Posts',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold
-            ),
+          Text(
+            'Search City Posts',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
-          Text('(Choose the location and one other filter)',
-            style: TextStyle(
-              fontSize: 20
-            ),
+          Text(
+            '(Choose the location first and one other filter)',
+            style: TextStyle(fontSize: 16.5),
           ),
           const Divider(
             thickness: 0.5,
@@ -113,20 +105,18 @@ class SearchCity extends State<SearchCityState> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/search/college');
             },
-            child: Text('Search College Posts',
-              style: TextStyle(
-                color: Colors.white
-              ),
+            child: Text(
+              'Search College Posts',
+              style: TextStyle(color: Colors.white),
             ),
             color: Colors.red,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-              side: BorderSide(color: Colors.red)
-            ),
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.red)),
           ),
           const Divider(
             thickness: 0.5,
-             color: Colors.white,
+            color: Colors.white,
           ),
           Form(
             child: Column(
@@ -140,16 +130,16 @@ class SearchCity extends State<SearchCityState> {
                     'Denver',
                     'Washington DC',
                     'Minneapolis'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  ]
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
                     getDropdownData(value);
                     setState(() {
-                       city = value;
+                      city = value;
                     });
                   },
                   hint: Text('City'),
@@ -160,16 +150,12 @@ class SearchCity extends State<SearchCityState> {
                 ),
                 DropdownButtonFormField(
                   isExpanded: true,
-                  items: barList.map((String value) =>
-                  DropdownMenuItem(
-                    child: Text(capitalize(value)),
-                    value: value
-                  )
-                  ).toList(),
+                  items: barList
+                      .map((String value) => DropdownMenuItem(
+                          child: Text(capitalize(value)), value: value))
+                      .toList(),
                   onChanged: (value) => {
-                    setState(() => {
-                      bar = value
-                    })
+                    setState(() => {bar = value})
                   },
                   hint: Text('Bar'),
                 ),
@@ -179,16 +165,14 @@ class SearchCity extends State<SearchCityState> {
                 ),
                 DropdownButtonFormField(
                   isExpanded: true,
-                  items: nbhoodList.map((String value) => 
-                  DropdownMenuItem(
-                    child: Text(capitalize(value)),
-                    value: value,
-                  )
-                  ).toList(),
+                  items: nbhoodList
+                      .map((String value) => DropdownMenuItem(
+                            child: Text(capitalize(value)),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (value) => {
-                    setState(() => {
-                      neighborhood = value
-                    })
+                    setState(() => {neighborhood = value})
                   },
                   hint: Text('Neighborhood'),
                 ),
@@ -198,13 +182,9 @@ class SearchCity extends State<SearchCityState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'User'
-                  ),
+                      border: OutlineInputBorder(), labelText: 'User'),
                   onChanged: (value) => {
-                    setState(() => {
-                      user = value
-                    })
+                    setState(() => {user = value})
                   },
                 ),
                 const Divider(
@@ -212,16 +192,14 @@ class SearchCity extends State<SearchCityState> {
                   color: Colors.white,
                 ),
                 RaisedButton(
-                  child: Text('Search',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
+                  child: Text(
+                    'Search',
+                    style: TextStyle(color: Colors.white),
                   ),
                   color: Colors.red,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.red)
-                  ),
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
                   onPressed: () {
                     searchPost();
                   },
@@ -229,7 +207,6 @@ class SearchCity extends State<SearchCityState> {
               ],
             ),
           ),
-
         ],
       ),
       bottomNavigationBar: BottomNavState(),

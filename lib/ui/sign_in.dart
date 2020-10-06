@@ -27,15 +27,18 @@ class SignIn extends State<SignInState> {
   signIn(username, password, context) async {
     await userService.init();
     final prefs = await SharedPreferences.getInstance();
-    bool succeed = await userService.signInUser(username, password);
-    if (succeed) {
+    var message = await userService.signInUser(username, password);
+    if (message == 'Success') {
       prefs.setString('user', username);
       _scaffoldKey.currentState.showSnackBar(success);
       Timer(Duration(milliseconds: 750), () {
         Navigator.pushReplacementNamed(context, '/home');
       });
     } else {
-      _scaffoldKey.currentState.showSnackBar(fail);
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 

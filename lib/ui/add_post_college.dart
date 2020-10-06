@@ -42,7 +42,11 @@ class AddPostCollege extends State<AddPostCollegeState> {
       'rating': rating,
       'region': neighborhood
     };
-    if (school == null || bar == null || content == null || rating == null) {
+    if (school == null ||
+        bar == null ||
+        content == null ||
+        rating == null ||
+        neighborhood == null) {
       _scaffoldKey.currentState.showSnackBar(failForm);
     } else {
       bool succeed = await apiSerivce.addCollegePost(item);
