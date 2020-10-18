@@ -79,7 +79,6 @@ class SearchCollege extends State<SearchCollegeState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,6 +118,8 @@ class SearchCollege extends State<SearchCollegeState> {
             color: Colors.white,
           ),
           Form(
+              child: Expanded(
+                  child: SingleChildScrollView(
             child: Column(
               children: [
                 DropdownButtonFormField(
@@ -211,7 +212,7 @@ class SearchCollege extends State<SearchCollegeState> {
                 )
               ],
             ),
-          ),
+          ))),
         ],
       ),
       bottomNavigationBar: BottomNavState(),

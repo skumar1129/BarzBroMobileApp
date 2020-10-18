@@ -61,14 +61,13 @@ class AddPost extends State<AddPostState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Column(
         children: <Widget>[
           NavBarState(),
           Center(
             child: Text(
-              'Create a City New Post',
+              'Create a New City Post',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
@@ -76,7 +75,44 @@ class AddPost extends State<AddPostState> {
             color: Colors.white,
             thickness: 0.5,
           ),
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/post/user');
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  submitPost(city, bar, neighborhood, rating, content);
+                },
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          ),
+          const Divider(
+            color: Colors.white,
+            thickness: 0.5,
+          ),
           Form(
+              child: Expanded(
+                  child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 DropdownButtonFormField(
@@ -166,44 +202,9 @@ class AddPost extends State<AddPostState> {
                       }
                   },
                 ),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 0.5,
-                ),
-                Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/post/user');
-                      },
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        submitPost(city, bar, neighborhood, rating, content);
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                )
               ],
             ),
-          ),
+          ))),
         ],
       ),
       bottomNavigationBar: BottomNavState(),

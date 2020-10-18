@@ -62,7 +62,6 @@ class AddPostCollege extends State<AddPostCollegeState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Column(
         children: <Widget>[
@@ -77,7 +76,44 @@ class AddPostCollege extends State<AddPostCollegeState> {
             color: Colors.white,
             thickness: 0.5,
           ),
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/post/school/user');
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  submitPost(school, bar, neighborhood, rating, content);
+                },
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          ),
+          const Divider(
+            color: Colors.white,
+            thickness: 0.5,
+          ),
           Form(
+              child: Expanded(
+                  child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 DropdownButtonFormField(
@@ -168,45 +204,9 @@ class AddPostCollege extends State<AddPostCollegeState> {
                       }
                   },
                 ),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 0.5,
-                ),
-                Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, '/post/school/user');
-                      },
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        submitPost(school, bar, neighborhood, rating, content);
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                )
               ],
             ),
-          ),
+          ))),
         ],
       ),
       bottomNavigationBar: BottomNavState(),

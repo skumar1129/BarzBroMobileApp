@@ -7,7 +7,7 @@ import '../widgets//bottom_nav.dart';
 class EditCityPostState extends StatefulWidget {
   EditCityPostState(this.postInfo);
   final postInfo;
-  @override 
+  @override
   EditCityPost createState() => EditCityPost();
 }
 
@@ -22,46 +22,44 @@ class EditCityPost extends State<EditCityPostState> {
   String content;
 
   final successEdit = SnackBar(
-    content: Text(
-      'Successfully edited your post'
-    ),
+    content: Text('Successfully edited your post'),
     backgroundColor: Colors.green,
   );
 
   final failEdit = SnackBar(
-    content: Text(
-      'Error updating post check your network connection'
-    ),
+    content: Text('Error updating post check your network connection'),
     backgroundColor: Colors.red,
   );
 
   final successDelete = SnackBar(
-    content: Text(
-      'Successfully deleted your post'
-    ),
+    content: Text('Successfully deleted your post'),
     backgroundColor: Colors.green,
   );
 
   final failDelete = SnackBar(
-    content: Text(
-      'Error deleting post check your network connection'
-    ),
+    content: Text('Error deleting post check your network connection'),
     backgroundColor: Colors.red,
   );
 
-  submitPost(String bar, String neighborhood, int rating, String content) async {
+  submitPost(
+      String bar, String neighborhood, int rating, String content) async {
     var item = {
-      'id':  post.id,
+      'id': post.id,
       'location': post.location,
       'timestamp': post.timestamp,
       'username': post.username,
       'locUser': post.locUser,
       'bar': (bar != null) ? bar.toLowerCase() : post.bar,
       'content': (content != null) ? content : post.content,
-      'neighborhood': (neighborhood != null) ? neighborhood.toLowerCase() : post.neighborhood,
+      'neighborhood': (neighborhood != null)
+          ? neighborhood.toLowerCase()
+          : post.neighborhood,
       'rating': (rating != null) ? rating : post.rating,
-      'locNeighborhood': (neighborhood != null) ? post.location + '-' + neighborhood.toLowerCase() : post.locNeighborhood,
-      'locBar': (bar != null) ? post.location + '-' + bar.toLowerCase() : post.locBar
+      'locNeighborhood': (neighborhood != null)
+          ? post.location + '-' + neighborhood.toLowerCase()
+          : post.locNeighborhood,
+      'locBar':
+          (bar != null) ? post.location + '-' + bar.toLowerCase() : post.locBar
     };
     bool succeed = await apiSerivce.updatePost(item);
     if (succeed) {
@@ -91,7 +89,6 @@ class EditCityPost extends State<EditCityPostState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Column(
         children: [
@@ -101,11 +98,9 @@ class EditCityPost extends State<EditCityPostState> {
             color: Colors.white,
           ),
           Center(
-            child: Text('Edit Your Post',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold
-              ),
+            child: Text(
+              'Edit Your Post',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
           const Divider(
@@ -113,32 +108,79 @@ class EditCityPost extends State<EditCityPostState> {
             color: Colors.white,
           ),
           Center(
-            child: Text(post.location,
-              style: TextStyle(
-                fontSize: 20
-              ),
+            child: Text(
+              post.location,
+              style: TextStyle(fontSize: 20),
             ),
           ),
           const Divider(
             thickness: 0.5,
             color: Colors.white,
           ),
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/post/user');
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  deletePost(post);
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  submitPost(bar, neighborhood, rating, content);
+                },
+                child: Text(
+                  'Update',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          ),
+          const Divider(
+            thickness: 0.5,
+            color: Colors.white,
+          ),
           Form(
+              child: Expanded(
+                  child: SingleChildScrollView(
             child: Column(
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Bar',
-                    hintText: capitalize(post.bar)
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Bar',
+                      hintText: capitalize(post.bar)),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        bar = value
-                      })
-                    }
-                  },  
+                    if (mounted)
+                      {
+                        setState(() => {bar = value})
+                      }
+                  },
                 ),
                 const Divider(
                   thickness: 0.5,
@@ -146,16 +188,14 @@ class EditCityPost extends State<EditCityPostState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Neighborhood',
-                    hintText: capitalize(post.neighborhood)
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Neighborhood',
+                      hintText: capitalize(post.neighborhood)),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        neighborhood = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {neighborhood = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -163,25 +203,14 @@ class EditCityPost extends State<EditCityPostState> {
                   color: Colors.white,
                 ),
                 DropdownButtonFormField(
-                  items: [
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
-                    if (mounted) {      
+                    if (mounted) {
                       setState(() {
                         rating = int.parse(value);
                       });
@@ -196,75 +225,19 @@ class EditCityPost extends State<EditCityPostState> {
                 TextField(
                   maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'What\'s good?*',
-                    hintText: post.content
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'What\'s good?*',
+                      hintText: post.content),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        content = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {content = value})
+                      }
                   },
                 ),
-                const Divider(
-                  thickness: 0.5,
-                  color: Colors.white,
-                ),
-                Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/post/user');
-                      },
-                      child: Text('Cancel',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        deletePost(post);
-                      },
-                      child: Text('Delete',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        submitPost(bar, neighborhood, rating, content);
-                      },
-                      child: Text('Update',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                )
               ],
             ),
-          ),
+          ))),
         ],
       ),
       bottomNavigationBar: BottomNavState(),

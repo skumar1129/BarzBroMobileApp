@@ -68,6 +68,7 @@ class SignUp extends State<SignUpState> {
           });
         }
       } else {
+        print(message);
         if (message ==
                 '1 validation error detected: Value at \'password\' failed to satisfy constraint: Member must have length greater than or equal to 6' ||
             message ==
@@ -80,6 +81,10 @@ class SignUp extends State<SignUpState> {
             message ==
                 '1 validation error detected: Value at \'password\' failed to satisfy constraint: Member must not be null') {
           message = 'Make sure not to leave fields blank';
+        }
+        if (message ==
+            '1 validation error detected: Value at \'username\' failed to satisfy constraint: Member must satisfy regular expression pattern: [\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]+') {
+          message = 'Make sure your username is one word with no spaces';
         }
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
