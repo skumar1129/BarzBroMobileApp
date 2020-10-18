@@ -7,7 +7,7 @@ import '../services/api_service.dart';
 class EditCollegePostState extends StatefulWidget {
   EditCollegePostState(this.postInfo);
   final postInfo;
-  @override 
+  @override
   EditCollegePost createState() => EditCollegePost();
 }
 
@@ -22,37 +22,28 @@ class EditCollegePost extends State<EditCollegePostState> {
   String content;
 
   final successEdit = SnackBar(
-    content: Text(
-      'Successfully edited your post'
-    ),
+    content: Text('Successfully edited your post'),
     backgroundColor: Colors.green,
   );
 
   final failEdit = SnackBar(
-    content: Text(
-      'Error updating post check your network connection'
-    ),
+    content: Text('Error updating post check your network connection'),
     backgroundColor: Colors.red,
   );
 
   final successDelete = SnackBar(
-    content: Text(
-      'Successfully deleted your post'
-    ),
+    content: Text('Successfully deleted your post'),
     backgroundColor: Colors.green,
   );
 
   final failDelete = SnackBar(
-    content: Text(
-      'Error deleting post check your network connection'
-    ),
+    content: Text('Error deleting post check your network connection'),
     backgroundColor: Colors.red,
   );
 
   submitPost(String bar, String region, int rating, String content) async {
-    
     var item = {
-      'id':  post.id,
+      'id': post.id,
       'school': post.school,
       'timestamp': post.timestamp,
       'username': post.username,
@@ -61,26 +52,28 @@ class EditCollegePost extends State<EditCollegePostState> {
       'content': (content != null) ? content : post.content,
       'region': (region != null) ? region.toLowerCase() : post.region,
       'rating': (rating != null) ? rating : post.rating,
-      'schoolReg': (region != null) ? post.school + '-' + region.toLowerCase() : post.schoolReg,
-      'schoolBar': (bar != null) ? post.school + '-' + bar.toLowerCase() : post.schoolBar
+      'schoolReg': (region != null)
+          ? post.school + '-' + region.toLowerCase()
+          : post.schoolReg,
+      'schoolBar':
+          (bar != null) ? post.school + '-' + bar.toLowerCase() : post.schoolBar
     };
     bool succeed = await apiSerivce.updateCollegePost(item);
     if (succeed) {
       _scaffoldKey.currentState.showSnackBar(successEdit);
       Navigator.pushReplacementNamed(context, '/post/school/user');
-    }
-    else {
+    } else {
       _scaffoldKey.currentState.showSnackBar(failEdit);
     }
   }
 
   deletePost(post) async {
-    bool succeed = await apiSerivce.deleteCollegePost(post.school, post.timestamp);
+    bool succeed =
+        await apiSerivce.deleteCollegePost(post.school, post.timestamp);
     if (succeed) {
       _scaffoldKey.currentState.showSnackBar(successDelete);
       Navigator.pushReplacementNamed(context, '/post/school/user');
-    }
-    else {
+    } else {
       _scaffoldKey.currentState.showSnackBar(failDelete);
     }
   }
@@ -94,7 +87,6 @@ class EditCollegePost extends State<EditCollegePostState> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: Column(
         children: [
@@ -104,11 +96,9 @@ class EditCollegePost extends State<EditCollegePostState> {
             color: Colors.white,
           ),
           Center(
-            child: Text('Edit Your Post',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold
-              ),
+            child: Text(
+              'Edit Your Post',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
           const Divider(
@@ -116,11 +106,58 @@ class EditCollegePost extends State<EditCollegePostState> {
             color: Colors.white,
           ),
           Center(
-            child: Text(post.school,
-              style: TextStyle(
-                fontSize: 20
-              ),
+            child: Text(
+              post.school,
+              style: TextStyle(fontSize: 20),
             ),
+          ),
+          const Divider(
+            thickness: 0.5,
+            color: Colors.white,
+          ),
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/post/school/user');
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  deletePost(post);
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  submitPost(bar, region, rating, content);
+                },
+                child: Text(
+                  'Update',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
           ),
           const Divider(
             thickness: 0.5,
@@ -131,17 +168,15 @@ class EditCollegePost extends State<EditCollegePostState> {
               children: [
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Bar',
-                    hintText: capitalize(post.bar)
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Bar',
+                      hintText: capitalize(post.bar)),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        bar = value
-                      })
-                    }
-                  },  
+                    if (mounted)
+                      {
+                        setState(() => {bar = value})
+                      }
+                  },
                 ),
                 const Divider(
                   thickness: 0.5,
@@ -149,16 +184,14 @@ class EditCollegePost extends State<EditCollegePostState> {
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Area of Campus',
-                    hintText: capitalize(post.region)
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Area of Campus',
+                      hintText: capitalize(post.region)),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        region = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {region = value})
+                      }
                   },
                 ),
                 const Divider(
@@ -166,25 +199,14 @@ class EditCollegePost extends State<EditCollegePostState> {
                   color: Colors.white,
                 ),
                 DropdownButtonFormField(
-                  items: [
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10'
-                  ].map((String value) => 
-                    DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    )
-                  ).toList(), 
+                  items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                      .map((String value) => DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: value,
+                          ))
+                      .toList(),
                   onChanged: (String value) {
-                    if (mounted) {      
+                    if (mounted) {
                       setState(() {
                         rating = int.parse(value);
                       });
@@ -199,72 +221,16 @@ class EditCollegePost extends State<EditCollegePostState> {
                 TextField(
                   maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'What\'s good?*',
-                    hintText: post.content
-                  ),
+                      border: OutlineInputBorder(),
+                      labelText: 'What\'s good?*',
+                      hintText: post.content),
                   onChanged: (value) => {
-                    if (mounted) {      
-                      setState(() => {
-                        content = value
-                      })
-                    }
+                    if (mounted)
+                      {
+                        setState(() => {content = value})
+                      }
                   },
                 ),
-                const Divider(
-                  thickness: 0.5,
-                  color: Colors.white,
-                ),
-                Row(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/post/school/user');
-                      },
-                      child: Text('Cancel',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        deletePost(post);
-                      },
-                      child: Text('Delete',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        submitPost(bar, region, rating, content);
-                      },
-                      child: Text('Update',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      color: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.red)
-                      ),
-                    ),
-                  ],
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                )
               ],
             ),
           ),
