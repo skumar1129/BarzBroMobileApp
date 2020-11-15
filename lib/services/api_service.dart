@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'cognito_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:BarzBRO/models/city_post_model.dart';
 import 'package:BarzBRO/models/college_post_model.dart';
+import 'package:flushbar/flushbar.dart';
 
 List<CityPost> parseCityPosts(dataItems) {
   var response =
@@ -149,8 +153,22 @@ class ApiService {
     return succeed;
   }
 
-  Future<List<CityPost>> getCityPosts(String location, [int start]) async {
-    await userService.init();
+  Future<List<CityPost>> getCityPosts(String location, BuildContext context,
+      [int start]) async {
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/l/$location?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -177,9 +195,23 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityPostsRating(String location,
+  Future<List<CityPost>> getCityPostsRating(
+      String location, BuildContext context,
       [int start, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/lr/$location?limit=5';
 
     var response;
@@ -206,9 +238,22 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityUserTime(String locUser,
+  Future<List<CityPost>> getCityUserTime(String locUser, BuildContext context,
       [int start, String location]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/lut/$locUser?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -234,9 +279,22 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityUserRating(String locUser,
+  Future<List<CityPost>> getCityUserRating(String locUser, BuildContext context,
       [int start, String location, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/lur/$locUser?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -262,9 +320,22 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityBarTime(String locBar,
+  Future<List<CityPost>> getCityBarTime(String locBar, BuildContext context,
       [int start, String location]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/lbt/$locBar?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -290,9 +361,22 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityBarRating(String locBar,
+  Future<List<CityPost>> getCityBarRating(String locBar, BuildContext context,
       [int start, String location, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/lbr/$locBar?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -318,8 +402,22 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getUserPost([int start, String location]) async {
-    await userService.init();
+  Future<List<CityPost>> getUserPost(BuildContext context,
+      [int start, String location]) async {
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     final prefs = await SharedPreferences.getInstance();
     String path = '/post/u/' + prefs.getString('user') + '?limit=4';
     var response;
@@ -444,9 +542,23 @@ class ApiService {
     return jsonResponse['Items'];
   }
 
-  Future<List<CityPost>> getCityNbhoodTime(String locNeighborhood,
+  Future<List<CityPost>> getCityNbhoodTime(
+      String locNeighborhood, BuildContext context,
       [int start, String location]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/nbhood/nt/$locNeighborhood?limit=5';
     var response;
     if (start != null && start > 0) {
@@ -473,9 +585,23 @@ class ApiService {
     return compute(parseCityPosts, jsonReponse['Items']);
   }
 
-  Future<List<CityPost>> getCityNbhoodRating(String locNeighborhood,
+  Future<List<CityPost>> getCityNbhoodRating(
+      String locNeighborhood, BuildContext context,
       [int start, String location, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/nbhood/nr/$locNeighborhood?limit';
     var response;
     if (start != null && start > 0) {
@@ -623,9 +749,23 @@ class ApiService {
     return succeed;
   }
 
-  Future<List<CollegePost>> getCollegePostTime(String college,
+  Future<List<CollegePost>> getCollegePostTime(
+      String college, BuildContext context,
       [int start]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/school/sr/$college?limit=5';
     String token = await userService.getToken();
     var response;
@@ -654,9 +794,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegePostRating(String college,
+  Future<List<CollegePost>> getCollegePostRating(
+      String college, BuildContext context,
       [int start, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/school/st/$college?limit=5';
     String token = await userService.getToken();
     var response;
@@ -682,9 +836,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegeBarTime(String schoolBar,
+  Future<List<CollegePost>> getCollegeBarTime(
+      String schoolBar, BuildContext context,
       [int start, String school]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schoolbar/sbt/$schoolBar?limit=5';
     String token = await userService.getToken();
     var response;
@@ -710,9 +878,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getCollegeBarRating(String schoolBar,
+  Future<List<CollegePost>> getCollegeBarRating(
+      String schoolBar, BuildContext context,
       [int start, String school, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schoolbar/sbr/$schoolBar?limit=5';
     String token = await userService.getToken();
     var response;
@@ -738,9 +920,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolRegTime(String schoolReg,
+  Future<List<CollegePost>> getSchoolRegTime(
+      String schoolReg, BuildContext context,
       [int start, String school]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schoolreg/srt/$schoolReg?limit=5';
     String token = await userService.getToken();
     var response;
@@ -766,9 +962,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolRegRating(String schoolReg,
+  Future<List<CollegePost>> getSchoolRegRating(
+      String schoolReg, BuildContext context,
       [int start, String school, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schoolreg/srr/$schoolReg?limit=5';
     String token = await userService.getToken();
     var response;
@@ -794,9 +1004,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolUserTime(String schoolUser,
+  Future<List<CollegePost>> getSchoolUserTime(
+      String schoolUser, BuildContext context,
       [int start, String school]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schooluser/sut/$schoolUser?limit=5';
     String token = await userService.getToken();
     var response;
@@ -822,9 +1046,23 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolUserRating(String schoolUser,
+  Future<List<CollegePost>> getSchoolUserRating(
+      String schoolUser, BuildContext context,
       [int start, String school, int rating]) async {
-    await userService.init();
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     String path = '/post/schooluser/sur/$schoolUser?limit=5';
     String token = await userService.getToken();
     var response;
@@ -850,8 +1088,22 @@ class ApiService {
     return compute(parseCollegePosts, jsonReponse['Items']);
   }
 
-  Future<List<CollegePost>> getSchoolUser([int start, String school]) async {
-    await userService.init();
+  Future<List<CollegePost>> getSchoolUser(BuildContext context,
+      [int start, String school]) async {
+    bool authPass;
+    authPass = await userService.init();
+    if (!authPass) {
+      Flushbar(
+        title: 'Authenication Error',
+        message: 'You will need to sign in again',
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 1000),
+      )..show(context);
+      Timer(Duration(milliseconds: 1000), () async {
+        await userService.signOut();
+        Navigator.pushReplacementNamed(context, '/signin');
+      });
+    }
     final prefs = await SharedPreferences.getInstance();
     String path = '/post/school/u/' + prefs.getString('user') + '?limit=5';
     String token = await userService.getToken();
