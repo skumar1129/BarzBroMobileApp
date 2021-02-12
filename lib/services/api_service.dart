@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -25,10 +25,8 @@ List<CollegePost> parseCollegePosts(dataItems) {
 
 class ApiService {
   final userService = new CognitoService();
-  final String city_api =
-      'https://vzpsdsnfc7.execute-api.us-east-2.amazonaws.com/prod';
-  final String college_api =
-      'https://wznyup28l6.execute-api.us-east-2.amazonaws.com/prod';
+  final String city_api = Config.CityApiUrl;
+  final String college_api = Config.CollegeApiUrl;
 
   Future<bool> addCityPost(item) async {
     bool succeed;

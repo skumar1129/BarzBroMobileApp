@@ -1,10 +1,11 @@
 import 'package:amazon_cognito_identity_dart/cognito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'cognito_storage.dart';
+import 'config.dart';
 
 class CognitoService {
   final CognitoUserPool _userPool =
-      new CognitoUserPool('us-east-2_FFPmb68u4', '3gc6oft576ol7ad0sf741n5jtg');
+      new CognitoUserPool(Config.cognitioRegion, Config.congnitoKey);
 
   CognitoUser _user;
   CognitoUserSession session;
