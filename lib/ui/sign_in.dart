@@ -142,7 +142,7 @@ class SignIn extends State<SignInState> {
               )
             ]),
       ),
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
     );
   }
 }
